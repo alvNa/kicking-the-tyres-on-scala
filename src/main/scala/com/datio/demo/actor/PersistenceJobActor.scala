@@ -1,18 +1,16 @@
 package com.datio.demo.actor
 
 import akka.actor.{Actor, ActorLogging, Props}
-import com.datio.demo.service.PostgreSqlService
 import akka.pattern.pipe
-import akka.pattern.ask
-import akka.util.Timeout
+import com.datio.demo.service.PostgreSqlService
 
 import scala.concurrent.Future
 
 object PersistenceJobActor {
-  def props(): Props = Props(classOf[PersistenceJobActor])
+  def props(): Props = Props(new PersistenceJobActor())
 }
 
-class PersistenceJobActor(postgreSqlService: PostgreSqlService = PostgreSqlService) extends Actor with ActorLogging {
+class PersistenceJobActor(val postgreSqlService: PostgreSqlService = PostgreSqlService) extends Actor with ActorLogging {
   import context._
 
   def receive = {

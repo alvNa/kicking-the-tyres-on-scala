@@ -21,18 +21,19 @@ object AkkaApp extends App{
   implicit val executionContext = system.dispatcher
   val log = Logging(system, getClass)
 
-  log.info(s">>> ${getClass.getName()} Initialising construction")
-  val managerActor = system.actorOf(Props[ManagerActor], "manager")
+  log.info(s">>> ${getClass.getName()} Initialising actors")
+//  val managerActor = system.actorOf(Props[ManagerActor], "manager")
+  lazy val managerActor = system.actorOf(Props(new ManagerActor()), "managerActor")
   //Actor's first call with message
   val future = managerActor ? AddJobRequest(Job("core-data","new"))
 
-  future onSuccess {
-    case response: AddJobResponse =>
+ /* future onSuccess {
+    case response: String =>
       log.info(s">>> ---------------------------------")
-      log.info(s">>> ${response.id}")
+      log.info(s">>> ${response}")
       log.info(s">>> ---------------------------------")
     case None => log.error("error")
   }
-
-  system.terminate()
+*/
+ // system.terminate()
 }
