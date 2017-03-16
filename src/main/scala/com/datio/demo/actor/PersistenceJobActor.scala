@@ -5,9 +5,10 @@ import akka.pattern.pipe
 import com.datio.demo.service.PostgreSqlService
 
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 object PersistenceJobActor {
-  def props(): Props = Props(new PersistenceJobActor())
+  def props(): Props = Props(new PersistenceJobActor(PostgreSqlService))
 }
 
 class PersistenceJobActor(val postgreSqlService: PostgreSqlService = PostgreSqlService) extends Actor with ActorLogging {

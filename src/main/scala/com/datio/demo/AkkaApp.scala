@@ -22,7 +22,7 @@ object AkkaApp extends App{
   val log = Logging(system, getClass)
 
   log.info(s">>> ${getClass.getName()} Initialising actors")
-//  val managerActor = system.actorOf(Props[ManagerActor], "manager")
+  //val managerActor = system.actorOf(Props[ManagerActor], "manager")
   lazy val managerActor = system.actorOf(Props(new ManagerActor()), "managerActor")
   //Actor's first call with message
   val future = managerActor ? AddJobRequest(Job("core-data","new"))
