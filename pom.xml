@@ -20,12 +20,12 @@
     <distributionManagement>
         <snapshotRepository>
             <id>nexus-snapshots</id>
-            <name>europa-snapshots</name>
+            <name>nexus-snapshots</name>
             <url>https://nexus/repository/maven-snapshots</url>
         </snapshotRepository>
         <repository>
             <id>nexus-releases</id>
-            <name>europa-releases</name>
+            <name>nexus-releases</name>
             <url>https://nexus/repository/maven-releases</url>
         </repository>
         <site>
