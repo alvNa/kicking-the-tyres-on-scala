@@ -1,8 +1,10 @@
 package com.datio.demo.actor
 
-import akka.actor.{Actor, ActorLogging, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import akka.pattern.ask
 import akka.pattern.pipe
-import com.datio.demo.service.PostgreSqlService
+import akka.util.Timeout
+import com.datio.demo.service.{MetronomeService, PostgreSqlService}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -17,6 +19,7 @@ class PersistenceJobActor(val postgreSqlService: PostgreSqlService = PostgreSqlS
   def receive = {
     case addJobRequest : AddJobRequest => handleAddJobRequest(addJobRequest.job)
     case getJobRequest : GetJobRequest => handleGetJobRequest(getJobRequest.id)
+    case updateRequest : UpdateMetronomeRunRequest => updateMetronomeRunId(updateRequest)
     case x => log.info(s"[PersistenceJobActor] Unexpected message $x")
   }
 
@@ -29,6 +32,12 @@ class PersistenceJobActor(val postgreSqlService: PostgreSqlService = PostgreSqlS
       case Some(job) => job pipeTo sender
       case None => sender ! JobNotFoundResponse()
     }
+  }
+
+  def updateMetronomeRunId(req: UpdateMetronomeRunRequest ) = {
+    log.info(s"[PersistenceJobActor] update with ${req}")
+    postgreSqlService.updateMetronomeRunId(req.uuid, Some(req.metronomeRunId)) pipeTo sender
+    log.info(s"[PersistenceJobActor] updated")
   }
 
 }

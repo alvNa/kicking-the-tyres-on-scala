@@ -15,18 +15,27 @@ class PostgreSqlService {
 
   def get(jobName: String): Option[Future[Job]] = {
     logger.info(getClass + s"get $jobName")
-    //Thread.sleep(1500)
     if (jobName=="no-core-data"){
       None
     }
     else{
-      Some(Future.successful(Job(jobName,"from postgresql")))
+      Some(
+        Future.successful(Job(jobName,"from postgresql"))
+        //Future {
+        //  Job(jobName,"from postgresql")
+        //}
+      )
     }
   }
 
   def add(job: Job): Future[String] = {
     logger.info(getClass + s"add ${job.name}")
-    //Thread.sleep(1000)
-    Future.successful(job.name)
+    Future.successful(job.status)
+  }
+
+  def updateMetronomeRunId(runId: String, metronomeRunId: Option[String]):Future[Unit] = {
+    logger.info("update DB()")
+    println("update DB()")
+    Future.successful()
   }
 }

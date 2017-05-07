@@ -31,8 +31,6 @@ class ManagerActor(val metronomeService: MetronomeService = MetronomeService) ex
   private def getPersistenceJobActor() = {
     context.child("PersistenceJobActor")
       .getOrElse(context.actorOf(Props(classOf[PersistenceJobActor], PostgreSqlService), "PersistenceJobActor"))
-
-
   }
 
   def receive: Receive = {
@@ -47,11 +45,37 @@ class ManagerActor(val metronomeService: MetronomeService = MetronomeService) ex
 
   private def handleAddJobRequest(job: Job) = {
     log.info(s"${getClass.getName()} Add job ...")
-    //val sendAux = sender
-    originalSender = Some(sender)
-    val future = getPersistenceJobActor() ? GetJobRequest("core-data")
-    /*val future2: Future[String] = metronomeService.add(job)
-    val future3: Future[String] = getPersistenceJobActor() ? AddJobRequest(job) collect {
+    val sendAux = sender
+
+    //originalSender = Some(sender)
+
+    val f1: Future[MetronomeJobStatus] = metronomeService.add(job.name)
+
+    val f2 = for {
+      metJobStatus <- {
+        log.info(s"Fut num 1")
+        f1.mapTo[MetronomeJobStatus]
+      }
+      updMet <- {
+        log.info(s"Fut num 2")
+        val req = UpdateMetronomeRunRequest(job.name,metJobStatus.runId)
+        ask(getPersistenceJobActor(),req).mapTo[Unit]
+      }
+    } yield updMet
+/*
+    f2 andThen {
+      case Success(x:Unit) => {log.info(s"Saved ")
+        Future.successful("")}
+      case Failure(ex) => {log.info(s"Fail ")
+        Future.failed(new NoSuchElementException())}
+    }
+    */
+    f2 pipeTo sendAux
+
+    //val p = Promise[Job]()
+    //val f = p.future
+
+    /*val future3: Future[String] = getPersistenceJobActor() ? AddJobRequest(job) collect {
       case x: String => x
     }*/
    /* future andThen {
@@ -88,7 +112,6 @@ class ManagerActor(val metronomeService: MetronomeService = MetronomeService) ex
     } pipeTo sender
     */
 
-    future pipeTo sender
   }
 
 }
