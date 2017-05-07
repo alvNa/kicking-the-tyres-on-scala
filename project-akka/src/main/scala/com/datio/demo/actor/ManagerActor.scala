@@ -62,56 +62,8 @@ class ManagerActor(val metronomeService: MetronomeService = MetronomeService) ex
         ask(getPersistenceJobActor(),req).mapTo[Unit]
       }
     } yield updMet
-/*
-    f2 andThen {
-      case Success(x:Unit) => {log.info(s"Saved ")
-        Future.successful("")}
-      case Failure(ex) => {log.info(s"Fail ")
-        Future.failed(new NoSuchElementException())}
-    }
-    */
+
     f2 pipeTo sendAux
-
-    //val p = Promise[Job]()
-    //val f = p.future
-
-    /*val future3: Future[String] = getPersistenceJobActor() ? AddJobRequest(job) collect {
-      case x: String => x
-    }*/
-   /* future andThen {
-      case Success(x:Job) => {val f1: Future[String] = metronomeService.add(job)
-        val f2: Future[String] = getPersistenceJobActor() ? AddJobRequest(job) collect {
-          case x: String => x
-        }
-
-        val p = Promise[Future[String]]()
-        p.success(f1).success(f2)
-
-        p.future }
-      case Failure(ex) => {
-        Future.successful("")
-      }
-    } pipeTo sender*/
-/*
-    (future1,future2,future3) => (future1 =>
-
-      ,f2,f3)*/
-/*
-    future collect {
-      case job: Job => {
-
-
-        val p = Promise[Future[String]]()
-        p.success(f1).success(f2)
-        p.future
-      }
-      case x: Any =>
-        log.info("error $x")
-      //  sender ! x
-        Future.successful("")
-    } pipeTo sender
-    */
-
   }
 
 }

@@ -21,9 +21,6 @@ class PostgreSqlService {
     else{
       Some(
         Future.successful(Job(jobName,"from postgresql"))
-        //Future {
-        //  Job(jobName,"from postgresql")
-        //}
       )
     }
   }

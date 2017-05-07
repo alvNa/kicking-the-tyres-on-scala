@@ -27,7 +27,6 @@ object AkkaApp extends App{
   //Actor's first call with message
   val future = managerActor ? AddJobRequest(Job("core-data","new"))
 
-
 /*
   future onSuccess {
     case response: String =>

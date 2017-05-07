@@ -15,13 +15,10 @@ class MetronomeService {
   private val logger = LogManager.getLogger(getClass())
 
   def get(jobId: String): Option[Future[MetronomeJobStatus]] = {
-    logger.info(getClass + s"get $jobId")
-    //Thread.sleep(4500)
     if (jobId=="no-core-data"){
       None
     }
     else{
-      //Future.successful(Job(jobName,"from postgresql"))
       val status = MetronomeJobStatus(jobId,"134","RUNNING")
       Some(Future.successful(status))
     }
@@ -29,8 +26,6 @@ class MetronomeService {
 
   def add(jobId: String): Future[MetronomeJobStatus] = {
     logger.info(getClass + s"add ${jobId}")
-    //Thread.sleep(4000)
-    //Future.successful(job.name)
     val randomId = "134"
     val status = MetronomeJobStatus(jobId,randomId,"RUNNING")
     Future.successful(status)
