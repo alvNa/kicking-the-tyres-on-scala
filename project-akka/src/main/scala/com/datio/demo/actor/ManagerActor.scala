@@ -52,14 +52,14 @@ class ManagerActor(val metronomeService: MetronomeService = MetronomeService) ex
     val f1: Future[MetronomeJobStatus] = metronomeService.add(job.name)
 
     val f2 = for {
-      metJobStatus <- {
+      metJobStatus:MetronomeJobStatus <- {
         log.info(s"Fut num 1")
         f1.mapTo[MetronomeJobStatus]
       }
-      updMet <- {
+      updMet:Unit <- {
         log.info(s"Fut num 2")
         val req = UpdateMetronomeRunRequest(job.name,metJobStatus.runId)
-        ask(getPersistenceJobActor(),req).mapTo[Unit]
+        (getPersistenceJobActor() ? req).mapTo[Unit]
       }
     } yield updMet
 
